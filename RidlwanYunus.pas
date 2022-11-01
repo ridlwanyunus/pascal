@@ -7,25 +7,25 @@ Write your code in this editor and press "Run" button to execute it.
 }
 
 
-program Hello;
+program RidlwanYunus;
 Uses crt;
 Type
-  pMyqueue = ^tMyqueue;
-  tMyqueue = record
+  pItem = ^tItem;
+  tItem = record
                name    : string[30];
                address : string[40];
-               next    : pMyqueue;
+               next    : pItem;
              end;
 var
-  head, last, whattodel : pMyqueue;
-  temp       : tMyqueue;  { Temporary record }
+  head, last, searchedItem : pItem;
+  temp       : tItem;  { Temporary record }
   searchedName      : string[30];
   pilihan   : integer;
 
 { This function add content to the last, then output the last pointer }
-function add(last : pMyqueue; content : tMyqueue):pMyqueue;
+function add(last : pItem; content : tItem):pItem;
 var 
-    cur : pMyqueue;
+    cur : pItem;
     y : ^word;
 begin
   new(cur);                       { Create a new pointer, step a }
@@ -41,8 +41,8 @@ begin
   add:=cur;             { Last is no longer the tail, but cur is; step d }
 end;
 
-procedure update(var head : pMyqueue; updateNode : pMyqueue; index: integer; newValue: string);
-var bef, cur, aft : pMyqueue;
+procedure update(var head : pItem; updateNode : pItem; index: integer; newValue: string);
+var bef, cur, aft : pItem;
 begin
     if head=nil then 
         exit;
@@ -58,13 +58,13 @@ begin
 
 end;
 
-procedure delete(var head : pMyqueue; whattodel : pMyqueue);
-var bef, cur, aft : pMyqueue;
+procedure delete(var head : pItem; searchedItem : pItem);
+var bef, cur, aft : pItem;
 begin
     if head=nil then 
         exit;
     
-    cur:=whattodel; 
+    cur:=searchedItem; 
     aft:=cur^.next;
     bef:=head;
     
@@ -82,9 +82,9 @@ begin
     end;
 end;
 
-function find(head : pMyqueue; name: string):pMyqueue;
+function find(head : pItem; name: string):pItem;
 var 
-    cur : pMyqueue; 
+    cur : pItem; 
     found : boolean;
     y : ^word;
 begin
@@ -111,8 +111,8 @@ begin
         find:=nil;
 end;
 
-procedure display(head : pMyqueue);
-var cur : pMyqueue;
+procedure display(head : pItem);
+var cur : pItem;
 begin
   cur:=head;           { Step 1 }
   while cur<>nil do    { Step 2 }
@@ -122,8 +122,8 @@ begin
   end;
 end;
 
-procedure destroy(var head : pMyqueue);
-var cur : pMyqueue;
+procedure destroy(var head : pItem);
+var cur : pItem;
 begin
   cur:=head;           { Step 1 }
   while cur<>nil do    { Step 2 }
@@ -136,7 +136,7 @@ end;
 
 begin
   head:=nil; last:=nil;               { Set all pointers to nil }
-  whattodel := nil;
+  searchedItem := nil;
   repeat
     
     writeln('1: Lihat'#9'2: Tambah'#9'3: Ubah'#9'4: Hapus'#9'0: Keluar');
@@ -163,15 +163,15 @@ begin
     else if pilihan = 3 then
     begin
         write('Edit Node: '); readln(searchedName);
-        whattodel := find(head, searchedName);
-        update(head, whattodel, 1, 'xxx');
+        searchedItem := find(head, searchedName);
+        update(head, searchedItem, 1, 'xxx');
         display(head);
     end
     else if pilihan = 4 then
     begin
         write('Delete Node: '); readln(searchedName);
-        whattodel := find(head, searchedName);
-        delete(head, whattodel);
+        searchedItem := find(head, searchedName);
+        delete(head, searchedItem);
         display(head);
     end;
   until false;          { Repeat forever }
