@@ -119,16 +119,35 @@ begin
         find:=nil;
 end;
 
+function printFormat(word: string; limit: integer): string;
+var
+    i, diff: integer;
+    wordFormatted: string;
+begin
+    
+    diff := limit - Length(word);
+    wordFormatted := word;
+    for i:=1 to diff do
+    begin
+        wordFormatted := wordFormatted + ' ';
+    end;
+    printFormat := wordFormatted;
+end;
+
 procedure display(head : pItem);
 var 
     cur : pItem;
 begin
     cur:=head;
+    writeln('----------------------------------------------');
+    writeln(printFormat('No',4), printFormat('Sedia',20), printFormat('Porsi',10), printFormat('Jumlah Harga',12));
+    writeln('----------------------------------------------');
     while cur<>nil do
     begin
-        writeln(cur^.id,#9, cur^.namaMenu,#9#9, cur^.jumlah,#9, cur^.jumlahHarga);
+        writeln(printFormat(intToStr(cur^.id),4), printFormat(cur^.namaMenu,20), printFormat(intToStr(cur^.jumlah),10), printFormat(intToStr(cur^.jumlahHarga),12));
         cur:=cur^.next;
     end;
+    writeln('----------------------------------------------');
 end;
 
 begin
