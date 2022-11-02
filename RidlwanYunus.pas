@@ -8,41 +8,41 @@ Write your code in this editor and press "Run" button to execute it.
 
 
 program RidlwanYunus;
-Uses crt;
-Type
-  pItem = ^tItem;
-  tItem = record
-               name    : string[30];
-               address : string[40];
-               next    : pItem;
-             end;
-var
-  head, last, searchedItem : pItem;
-  temp       : tItem;  { Temporary record }
-  searchedName      : string[30];
-  pilihan   : integer;
 
-{ This function add content to the last, then output the last pointer }
-function add(last : pItem; content : tItem):pItem;
+Uses crt, sysutils;
+
+Type
+    pItem = ^tItem;
+    tItem = record
+                id      : integer;
+                namaMenu    : string[30];
+                jumlah  : integer;
+                jumlahHarga  : longint;
+                next    : pItem;
+            end;
+var
+    head, last, searchedItem  : pItem;
+    temp  : tItem;  
+    searchedIndex, searchedField  : integer;
+    newValue : string[30];
+    pilihan   : integer;
+
+function add(last : pItem; content : tItem): pItem;
 var 
     cur : pItem;
-    y : ^word;
 begin
-  new(cur);                       { Create a new pointer, step a }
-  cur^.name:=content.name;        { fill it up with data; still step a }
-  cur^.address:=content.address;
-  cur^.next:=nil;                     { step b }
-  
-  y := addr(cur);
-  writeln(y^);
-  
-    
-  if last<>nil then last^.next:=cur;  { step c }
-  add:=cur;             { Last is no longer the tail, but cur is; step d }
+    new(cur);
+    cur^.id:=content.id;
+    cur^.namaMenu:=content.namaMenu;
+    cur^.jumlah:=content.jumlah;
+    cur^.jumlahHarga:=content.jumlahHarga;
+    cur^.next:=nil; 
+    if last<>nil then last^.next:=cur; 
+    add:=cur; 
 end;
 
 procedure update(var head : pItem; updateNode : pItem; index: integer; newValue: string);
-var bef, cur, aft : pItem;
+var cur : pItem;
 begin
     if head=nil then 
         exit;
@@ -50,18 +50,21 @@ begin
     cur:=updateNode; 
     
     if index=1 then
-        cur^.name := newValue;
-    
+        cur^.id := strToInt(newValue);
+     
     if index=2 then
-        cur^.address := newValue;
+        cur^.namaMenu := newValue;
+     
+    if index=3 then
+        cur^.jumlah := strToInt(newValue);
     
-
+    if index=4 then
+        cur^.jumlahHarga := strToInt(newValue);
 end;
 
 procedure delete(var head : pItem; var tail: pItem; searchedItem : pItem);
 var 
     bef, cur, aft : pItem;
-    y : ^word;
 begin
     if head=nil then 
         exit;
@@ -76,11 +79,9 @@ begin
         begin   
             
             bef:=bef^.next;
-            if bef^.next= tail then
+            if (bef^.next= tail) and (cur = tail) then
             begin
                 tail := bef;
-                y := addr(tail);
-                writeln('Now tail is: ', y^);
             end;
         end;
         bef^.next:=aft;
@@ -88,24 +89,22 @@ begin
     end
     else
     begin
-        
         dispose(head); 
         head:=aft;
     end;
 end;
 
-function find(head : pItem; name: string):pItem;
+function find(head : pItem; id: integer):pItem;
 var 
     cur : pItem; 
     found : boolean;
-    y : ^word;
 begin
-    writeln('you searched: ', name);
+    writeln('you searched: ', id);
     cur:=head;
     while cur<>nil do
     begin
-        writeln(cur^.name);
-        if cur^.name=name then
+        writeln(cur^.id);
+        if cur^.id=id then
         begin
             found:=true; break;
         end;
@@ -114,9 +113,6 @@ begin
 
     if found then 
     begin
-        y := addr(cur);
-        writeln(y^);
-
         find:=cur;
     end
     else 
@@ -124,38 +120,26 @@ begin
 end;
 
 procedure display(head : pItem);
-var cur : pItem;
+var 
+    cur : pItem;
 begin
-  cur:=head;           { Step 1 }
-  while cur<>nil do    { Step 2 }
-  begin
-    writeln(cur^.name:35,cur^.address);  { Step 3 }
-    cur:=cur^.next;
-  end;
-end;
-
-procedure destroy(var head : pItem);
-var cur : pItem;
-begin
-  cur:=head;           { Step 1 }
-  while cur<>nil do    { Step 2 }
-  begin
-    cur:=cur^.next;
-    dispose(head);     { Step 3 }
-    head:=cur;         { Step 4 }
-  end;
+    cur:=head;
+    while cur<>nil do
+    begin
+        writeln(cur^.id,#9, cur^.namaMenu,#9#9, cur^.jumlah,#9, cur^.jumlahHarga);
+        cur:=cur^.next;
+    end;
 end;
 
 begin
-  head:=nil; last:=nil;               { Set all pointers to nil }
+  head:=nil; 
+  last:=nil;
   searchedItem := nil;
+  
   repeat
-    
     writeln('1: Lihat'#9'2: Tambah'#9'3: Ubah'#9'4: Hapus'#9'0: Keluar');
     write('Pilihan: '); readln(pilihan);
-    
-    
-    
+
     if pilihan = 0 then
     begin
         break;
@@ -166,29 +150,29 @@ begin
     end
     else if pilihan = 2 then
     begin
-        write('Name     : '); readln(temp.name);
-        write('Address  : '); readln(temp.address);
+        write('id'#9': '); readln(temp.id);
+        write('Nama'#9': '); readln(temp.namaMenu);
+        write('Jumlah'#9': '); readln(temp.jumlah);
+        write('Harga'#9': '); readln(temp.jumlahHarga);
         last:=add(last,temp);
         if head=nil then head:=last;
         display(head);
     end
     else if pilihan = 3 then
     begin
-        write('Edit Node: '); readln(searchedName);
-        searchedItem := find(head, searchedName);
-        update(head, searchedItem, 1, 'xxx');
+        write('Edit Node: '); readln(searchedIndex);
+        searchedItem := find(head, searchedIndex);
+        write('Index: '); readln(searchedField);
+        write('New value: '); readln(newValue);
+        update(head, searchedItem, searchedField, newValue);
         display(head);
     end
     else if pilihan = 4 then
     begin
-        write('Delete Node: '); readln(searchedName);
-        searchedItem := find(head, searchedName);
+        write('Delete Node: '); readln(searchedIndex);
+        searchedItem := find(head, searchedIndex);
         delete(head, last, searchedItem);
         display(head);
     end;
-  until false;          { Repeat forever }
-  readkey;
-  destroy(head);
+  until false;
 end.
-
-

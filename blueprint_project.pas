@@ -18,27 +18,23 @@ Type
              end;
 var
   head, last, searchedItem : pItem;
-  temp       : tItem;  { Temporary record }
+  temp       : tItem;  
   searchedName      : string[30];
   pilihan   : integer;
 
-{ This function add content to the last, then output the last pointer }
+
 function add(last : pItem; content : tItem):pItem;
 var 
     cur : pItem;
     y : ^word;
 begin
-  new(cur);                       { Create a new pointer, step a }
-  cur^.name:=content.name;        { fill it up with data; still step a }
+  new(cur);
+  cur^.name:=content.name;
   cur^.address:=content.address;
-  cur^.next:=nil;                     { step b }
-  
-  y := addr(cur);
-  writeln(y^);
-  
-    
-  if last<>nil then last^.next:=cur;  { step c }
-  add:=cur;             { Last is no longer the tail, but cur is; step d }
+  cur^.next:=nil;
+
+  if last<>nil then last^.next:=cur; 
+  add:=cur; 
 end;
 
 procedure update(var head : pItem; updateNode : pItem; index: integer; newValue: string);
@@ -61,7 +57,6 @@ end;
 procedure delete(var head : pItem; var tail: pItem; searchedItem : pItem);
 var 
     bef, cur, aft : pItem;
-    y : ^word;
 begin
     if head=nil then 
         exit;
@@ -76,11 +71,9 @@ begin
         begin   
             
             bef:=bef^.next;
-            if bef^.next= tail then
+            if (bef^.next= tail) and (cur = tail) then
             begin
                 tail := bef;
-                y := addr(tail);
-                writeln('Now tail is: ', y^);
             end;
         end;
         bef^.next:=aft;
@@ -98,7 +91,6 @@ function find(head : pItem; name: string):pItem;
 var 
     cur : pItem; 
     found : boolean;
-    y : ^word;
 begin
     writeln('you searched: ', name);
     cur:=head;
@@ -114,9 +106,6 @@ begin
 
     if found then 
     begin
-        y := addr(cur);
-        writeln(y^);
-
         find:=cur;
     end
     else 
@@ -126,28 +115,16 @@ end;
 procedure display(head : pItem);
 var cur : pItem;
 begin
-  cur:=head;           { Step 1 }
-  while cur<>nil do    { Step 2 }
+  cur:=head;
+  while cur<>nil do
   begin
-    writeln(cur^.name:35,cur^.address);  { Step 3 }
+    writeln(cur^.name:35,cur^.address);
     cur:=cur^.next;
   end;
 end;
 
-procedure destroy(var head : pItem);
-var cur : pItem;
 begin
-  cur:=head;           { Step 1 }
-  while cur<>nil do    { Step 2 }
-  begin
-    cur:=cur^.next;
-    dispose(head);     { Step 3 }
-    head:=cur;         { Step 4 }
-  end;
-end;
-
-begin
-  head:=nil; last:=nil;               { Set all pointers to nil }
+  head:=nil; last:=nil;
   searchedItem := nil;
   repeat
     
@@ -186,9 +163,5 @@ begin
         delete(head, last, searchedItem);
         display(head);
     end;
-  until false;          { Repeat forever }
-  readkey;
-  destroy(head);
+  until false;
 end.
-
-
