@@ -58,8 +58,10 @@ begin
 
 end;
 
-procedure delete(var head : pItem; searchedItem : pItem);
-var bef, cur, aft : pItem;
+procedure delete(var head : pItem; var tail: pItem; searchedItem : pItem);
+var 
+    bef, cur, aft : pItem;
+    y : ^word;
 begin
     if head=nil then 
         exit;
@@ -71,12 +73,22 @@ begin
     if bef<>cur then
     begin
         while (bef^.next<>cur) and (bef<>nil) do 
+        begin   
+            
             bef:=bef^.next;
+            if bef^.next= tail then
+            begin
+                tail := bef;
+                y := addr(tail);
+                writeln('Now tail is: ', y^);
+            end;
+        end;
         bef^.next:=aft;
         dispose(cur);
     end
     else
     begin
+        
         dispose(head); 
         head:=aft;
     end;
@@ -171,7 +183,7 @@ begin
     begin
         write('Delete Node: '); readln(searchedName);
         searchedItem := find(head, searchedName);
-        delete(head, searchedItem);
+        delete(head, last, searchedItem);
         display(head);
     end;
   until false;          { Repeat forever }
