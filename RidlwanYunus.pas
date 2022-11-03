@@ -25,7 +25,7 @@ var
     temp  : tItem;  
     searchedIndex, searchedField  : integer;
     newValue : string[30];
-    pilihan   : integer;
+    pilihan   : string[1];
 
 function add(last : pItem; content : tItem): pItem;
 var 
@@ -99,11 +99,9 @@ var
     cur : pItem; 
     found : boolean;
 begin
-    writeln('you searched: ', id);
     cur:=head;
     while cur<>nil do
     begin
-        writeln(cur^.id);
         if cur^.id=id then
         begin
             found:=true; break;
@@ -137,17 +135,26 @@ end;
 procedure display(head : pItem);
 var 
     cur : pItem;
+    totalHarga : longint;
 begin
     cur:=head;
-    writeln('----------------------------------------------');
+    totalHarga := 0;
+    
+    writeln;
+    writeln('WARUNG SATE KAMBING');
+    writeln('PAK DADI SOLO');
+    writeln('-------------------------------------------------');
     writeln(printFormat('No',4), printFormat('Sedia',20), printFormat('Porsi',10), printFormat('Jumlah Harga',12));
-    writeln('----------------------------------------------');
+    writeln('-------------------------------------------------');
     while cur<>nil do
     begin
         writeln(printFormat(intToStr(cur^.id),4), printFormat(cur^.namaMenu,20), printFormat(intToStr(cur^.jumlah),10), printFormat(intToStr(cur^.jumlahHarga),12));
+        totalHarga := totalHarga + cur^.jumlahHarga;
+        
         cur:=cur^.next;
     end;
-    writeln('----------------------------------------------');
+    writeln('-------------------------------------------------');
+    writeln(printFormat('Total Harga',15), printFormat(' ',19), printFormat(intToStr(totalHarga),12));
 end;
 
 begin
@@ -155,38 +162,48 @@ begin
   last:=nil;
   searchedItem := nil;
   
+  display(head);
+  
   repeat
-    writeln('1: Lihat'#9'2: Tambah'#9'3: Ubah'#9'4: Hapus'#9'0: Keluar');
+    writeln(printFormat('(v): Lihat',15),printFormat('(a): Tambah',15),printFormat('(e): Edit',15),printFormat('(d): Hapus', 15), printFormat('(x): Keluar', 15));
     write('Pilihan: '); readln(pilihan);
 
-    if pilihan = 0 then
+    if pilihan = 'x' then
     begin
         break;
     end
-    else if pilihan = 1 then
+    else if pilihan = 'v' then
     begin
         display(head);
     end
-    else if pilihan = 2 then
+    else if pilihan = 'a' then
     begin
-        write('id'#9': '); readln(temp.id);
-        write('Nama'#9': '); readln(temp.namaMenu);
-        write('Jumlah'#9': '); readln(temp.jumlah);
-        write('Harga'#9': '); readln(temp.jumlahHarga);
+        write(printFormat('id',15),': '); readln(temp.id);
+        write(printFormat('Nama',15),': '); readln(temp.namaMenu);
+        write(printFormat('Jumlah',15),': '); readln(temp.jumlah);
+        write(printFormat('Jumlah Harga',15),': '); readln(temp.jumlahHarga);
         last:=add(last,temp);
         if head=nil then head:=last;
         display(head);
     end
-    else if pilihan = 3 then
+    else if pilihan = 'e' then
     begin
         write('Edit Node: '); readln(searchedIndex);
         searchedItem := find(head, searchedIndex);
+        
+        
+        writeln(printFormat('Daftar Index',15));
+        writeln(printFormat('(1) No',15));
+        writeln(printFormat('(2) Sedia',15));
+        writeln(printFormat('(3) Porsi',15));
+        writeln(printFormat('(4) Jumlah Harga',15));
         write('Index: '); readln(searchedField);
+        
         write('New value: '); readln(newValue);
         update(head, searchedItem, searchedField, newValue);
         display(head);
     end
-    else if pilihan = 4 then
+    else if pilihan = 'd' then
     begin
         write('Delete Node: '); readln(searchedIndex);
         searchedItem := find(head, searchedIndex);
