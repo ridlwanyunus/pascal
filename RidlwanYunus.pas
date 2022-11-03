@@ -14,18 +14,18 @@ Uses crt, sysutils;
 Type
     pItem = ^tItem;
     tItem = record
-                id      : integer;
-                namaMenu    : string[30];
-                jumlah  : integer;
-                jumlahHarga  : longint;
-                next    : pItem;
+                id : integer;
+                namaMenu : string[30];
+                jumlah : integer;
+                jumlahHarga : longint;
+                next : pItem;
             end;
 var
-    head, last, searchedItem  : pItem;
-    temp  : tItem;  
-    searchedIndex, searchedField  : integer;
+    head, last, searchedItem : pItem;
+    temp : tItem;  
+    searchedIndex, searchedField : integer;
     newValue : string[30];
-    pilihan   : string[1];
+    pilihan : string[1];
 
 function add(last : pItem; content : tItem): pItem;
 var 
