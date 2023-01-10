@@ -1,0 +1,38 @@
+program SequentialSearch;
+type
+    Matriks = array[1..100] of integer;
+var
+    data: Matriks;
+    i, j, n, temp, search: integer;
+    found: boolean;
+begin
+
+  data[1]:=1;
+  data[2]:=5;
+  data[3]:=39;
+  data[4]:=58;
+  data[5]:=22;
+  found := false;
+  
+  n := 5;
+  search := 57;
+  
+  for i:=1 to n do
+  begin
+    if data[i] = search then
+    begin
+        found := true;
+        break;
+    end;
+  end;
+  
+  if found = true then
+    begin
+        writeln(i,': ',data[i]);
+    end
+    else
+    begin
+    writeln('Data tidak ditemukan');
+    end;
+
+end.
