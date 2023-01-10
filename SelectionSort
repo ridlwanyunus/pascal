@@ -1,0 +1,35 @@
+program SelectionSort;
+type
+    Matriks = array[1..100] of integer;
+var
+    data: Matriks;
+    i, j, n, temp: integer;
+begin
+
+  data[1]:=64;
+  data[2]:=25;
+  data[3]:=12;
+  data[4]:=22;
+  data[5]:=11;
+  
+  n := 5;
+ 
+  for i:=1 to n do
+  begin
+    temp := 0;
+    for j:=i to n do
+    begin
+        if (data[i] > data[j]) then
+        begin
+            temp := data[i];
+            data[i] := data[j];
+            data[j] := temp;
+        end;
+    end;
+  end;
+  for i:=1 to n do
+  begin
+    write(data[i]);
+    write(' ');
+  end;
+end.
